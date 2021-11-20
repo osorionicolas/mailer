@@ -1,0 +1,42 @@
+plugins {
+	id 'org.springframework.boot' version '2.5.7'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'com.bmuschko.docker-spring-boot-application' version '7.1.0'
+}
+
+group = 'com.nosorio'
+version = '0.0.1'
+sourceCompatibility = JavaVersion.VERSION_11
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.amqp:spring-rabbit-test'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+docker {
+	springBootApplication {
+		baseImage = 'openjdk:11-jre-slim'
+		ports = [8080]
+		images = ["secretcolossus/${project.name}:${project.version}", "secretcolossus/${project.name}:latest"]
+		jvmArgs = ['-Dspring.profiles.active=production', '-Xmx2048m']
+	}
+}
