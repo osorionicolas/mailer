@@ -1,5 +1,7 @@
 package com.nosorio.mailer.messaging;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nosorio.mailer.models.MailBean;
 import com.nosorio.mailer.services.MailService;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +22,21 @@ import java.util.concurrent.CountDownLatch;
 public class Receiver {
 
     private final MailService mailService;
-    private CountDownLatch latch = new CountDownLatch(1);
+    private final CountDownLatch latch = new CountDownLatch(1);
 
     @RabbitHandler
-    private void receiveEMail(MailBean mailBean){
-        log.info ("Correo recibido");
-        //enviar correo electrónico
-        mailService.sendMail(mailBean);
-        log.info ("Correo enviado");
-        latch.countDown();
+    private void receiveEMail(String message) {
+        try {
+            log.info ("Mail received");
+            MailBean mailBean = new ObjectMapper().readValue(message, MailBean.class);
+            //enviar correo electrónico
+            mailService.sendMail(mailBean);
+            log.info ("Mail sent");
+            latch.countDown();
+        }
+        catch(JsonProcessingException e) {
+            log.error("RabbitMQ message couldn't be processed. Error: {}", e.getMessage());
+        }
     }
 
     public CountDownLatch getLatch() {

@@ -1,13 +1,11 @@
 package com.nosorio.mailer.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.io.Serializable;
+import lombok.Setter;
 
 @Getter
-@AllArgsConstructor
-public class MailBean implements Serializable {
+@Setter
+public class MailBean {
     //Asunto del email
     private String subject;
 
