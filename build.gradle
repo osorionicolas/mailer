@@ -19,14 +19,24 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set('springCloudStreamVersion', "2020.0.3")
+}
+
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka-streams'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.2'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.amqp:spring-rabbit-test'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudStreamVersion")}")
+	}
 }
 
 test {

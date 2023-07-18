@@ -1,0 +1,18 @@
+spring:
+  main.banner-mode: off
+
+  mail:
+    username: test@test.com
+    host: localhost
+    port: 25
+
+  cloud.stream:
+    bindings:
+      receiveEmail-in-0:
+        destination: mailer
+    kafka:
+      binder:
+        brokers: localhost:9094
+      streams.binder.functions:
+        receiveEmail:
+          applicationId: mailer
