@@ -2,9 +2,9 @@ spring:
   main.banner-mode: off
 
   mail:
-    username: test@test.com
-    host: localhost
-    port: 25
+    username: ${USERNAME:test@test.com}
+    host: ${HOST:localhost}
+    port: ${PORT:25}
 
   cloud.stream:
     bindings:
@@ -12,7 +12,10 @@ spring:
         destination: mailer
     kafka:
       binder:
-        brokers: localhost:9094
-      streams.binder.functions:
-        receiveEmail:
-          applicationId: mailer
+        brokers: ${KAFKA_HOST:localhost:9094}
+      streams.binder:
+        configuration:
+          spring.json.use.type.headers: false
+        functions:
+          receiveEmail:
+            applicationId: mailer
