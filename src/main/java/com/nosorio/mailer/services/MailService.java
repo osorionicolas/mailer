@@ -30,14 +30,14 @@ public class MailService {
     public void sendEmail() {
         SimpleMailMessage mimeMessage = new SimpleMailMessage();
         mimeMessage.setFrom(sender);
-        mimeMessage.setTo("test@xmentor.com");
+        mimeMessage.setTo(sender);
         mimeMessage.setSubject ("SpringBoot integra JavaMail para realizar el envío de correo");
         mimeMessage.setText ("SpringBoot integra JavaMail para realizar el envío de mensajes de texto");
         mailSender.send(mimeMessage);
     }
 
     /**
-     * Enviar correo: el cuerpo del correo es HTML
+     * Send mail: mail body is HTML
      * @param emailBean reference of [@MailBean]
      */
     public void sendEmail(EmailBean emailBean) {
@@ -51,11 +51,9 @@ public class MailService {
             final Locale locale = Locale.ENGLISH;
             final Context thymeleafContext = new Context(locale);
             thymeleafContext.setVariable("recipientName", emailBean.getDestinationAddrs());
-            thymeleafContext.setVariable("text", emailBean.getText());
-            thymeleafContext.setVariable("regards", "test");
-            thymeleafContext.setVariable("senderName", "test");
+            thymeleafContext.setVariable("body", emailBean.getBody());
 
-            String htmlBody = thymeleafTemplateEngine.process("test.html", thymeleafContext);
+            String htmlBody = thymeleafTemplateEngine.process("email.html", thymeleafContext);
             helper.setText(htmlBody, true);
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -65,7 +63,7 @@ public class MailService {
     }
 
     /**
-     * Enviar correo electrónico adjunto
+     * Send email attachment
      * @param emailBean reference of {@link EmailBean}
      */
     public void sendEmailAttachment(EmailBean emailBean) {
@@ -75,8 +73,7 @@ public class MailService {
             helper.setFrom(sender);
             helper.setTo(emailBean.getDestinationAddrs());
             helper.setSubject(emailBean.getSubject());
-            helper.setText(emailBean.getText(), true);
-            // Agrega el nombre del adjunto y el adjunto
+            helper.setText(emailBean.getBody(), true);
             helper.addAttachment(emailBean.getAttachmentFilename(), emailBean.getFile());
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {

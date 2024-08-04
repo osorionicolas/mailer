@@ -5,11 +5,9 @@ import org.springframework.core.io.FileSystemResource;
 
 @Data
 public class EmailBean {
-    //Asunto del email
     private String subject;
 
-    //contenido del correo electrónico
-    private String text;
+    private String body;
 
     private FileSystemResource file;
 
